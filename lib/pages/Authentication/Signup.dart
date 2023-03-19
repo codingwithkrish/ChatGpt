@@ -1,10 +1,10 @@
 import 'package:chatgpt/pages/Authentication/Login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 
-import '../../constant/utils/Color.dart';
 import '../../constant/utils/spacing.dart';
 import '../../controller/SignIn.dart';
 import '../../widgets/Widgethelper1.dart';
@@ -32,7 +32,9 @@ class _SignInState extends State<SignIn> {
                 sizedBoxheight20,
                 loginUppertxt("Log In with one of the following options. "),
                 sizedBoxheight14,
-                googleLogo(),
+                googleLogo(() async {
+                  await controller.signInWithGoogle();
+                }),
                 sizedBoxheight36,
                 loginUppertxt("Email"),
                 sizedBoxheight5,
@@ -42,7 +44,11 @@ class _SignInState extends State<SignIn> {
                 sizedBoxheight5,
                 textfield(controller.passController),
                 sizedBoxheight14,
-                LoginButton("Create Account"),
+                controller.loading == false
+                    ? Center(child: CircularProgressIndicator())
+                    : LoginButton("Log In", () async {
+                        await controller.SiginWithEmail();
+                      }),
                 sizedBoxheight14,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +63,6 @@ class _SignInState extends State<SignIn> {
                         "Sign Up",
                         style: TextStyle(
                             decoration: TextDecoration.underline,
-                            color: textColor,
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold),
                       ),
