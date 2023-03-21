@@ -411,3 +411,11 @@ Widget boxhome(VoidCallback ontap, String text1, String text2) {
     ),
   );
 }
+
+ListTileE(IconData icos, String text, VoidCallback ontap) {
+  return ListTile(
+    leading: Icon(icos),
+    title: Text(text),
+    onTap: ontap,
+  );
+}

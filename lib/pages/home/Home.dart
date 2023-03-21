@@ -1,6 +1,7 @@
 import 'package:chatgpt/constant/utils/spacing.dart';
 import 'package:chatgpt/pages/home/MainHome.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -31,19 +32,80 @@ class Home extends StatefulWidget {
 // )
 class _HomeState extends State<Home> {
   TextCompletionController controller = new TextCompletionController();
+  final _advancedDrawerController = AdvancedDrawerController();
+  void _handleMenuButtonPressed() {
+    // NOTICE: Manage Advanced Drawer state through the Controller.
+    // _advancedDrawerController.value = AdvancedDrawerValue.visible();
+    _advancedDrawerController.showDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ZoomDrawer(
-      borderRadius: 24.0,
-      controller: ZoomDrawerController(),
-      showShadow: true,
-      angle: 0.0,
-      drawerShadowsBackgroundColor: greywhite,
-      slideWidth: MediaQuery.of(context).size.width * 0.65,
-      mainScreen: Scaffold(
+    return AdvancedDrawer(
+      backdropColor: greywhite,
+      controller: _advancedDrawerController,
+      animationCurve: Curves.linearToEaseOut,
+      animationDuration: const Duration(milliseconds: 300),
+      animateChildDecoration: true,
+      rtlOpening: false,
+      // openScale: 1.0,
+      disabledGestures: false,
+      childDecoration: const BoxDecoration(
+        // NOTICE: Uncomment if you want to add shadow behind the page.
+        // Keep in mind that it may cause animation jerks.
+        // boxShadow: <BoxShadow>[
+        //   BoxShadow(
+        //     color: Colors.black12,
+        //     blurRadius: 0.0,
+        //   ),
+        // ],
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Container(
+            child: Column(
+              children: [
+                sizedBoxheight14,
+                ListTile(
+                  leading: Image.asset("assets/images/gpt.png"),
+                  title: Text(
+                    "ChatGpt",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
+                  ),
+                ),
+                ListTileE(Icons.newspaper, "Daily News", () {}),
+                ListTileE(Icons.image, "AI IMAGE Generator", () {}),
+                ListTileE(Icons.text_fields_sharp, "Text Completion", () {}),
+                ListTileE(Icons.code_sharp, "Code Completion", () {}),
+                ListTileE(Icons.camera, "Object Detection", () {}),
+                ListTileE(Icons.settings, "Settings", () {}),
+                ListTileE(Icons.support, "Support", () {})
+              ],
+            ),
+          ),
+        ),
+      ),
+      child: Scaffold(
         resizeToAvoidBottomInset: true,
         extendBody: true,
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: _handleMenuButtonPressed,
+            icon: ValueListenableBuilder<AdvancedDrawerValue>(
+              valueListenable: _advancedDrawerController,
+              builder: (_, value, __) {
+                return AnimatedSwitcher(
+                  duration: Duration(milliseconds: 250),
+                  child: Icon(
+                    value.visible ? Icons.clear : Icons.menu,
+                    key: ValueKey<bool>(value.visible),
+                  ),
+                );
+              },
+            ),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(48.0),
             child: Theme(
@@ -200,7 +262,6 @@ class _HomeState extends State<Home> {
           ],
         )),
       ),
-      menuScreen: Container(),
     );
   }
 }
