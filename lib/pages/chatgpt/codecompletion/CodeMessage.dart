@@ -7,7 +7,10 @@ import 'package:lottie/lottie.dart';
 import '../../../widgets/Widgethelper1.dart';
 
 class CodeMessage extends StatefulWidget {
-  CodeMessage({Key? key}) : super(key: key);
+  String name;
+  int i;
+  CodeMessage({Key? key, required this.name, required this.i})
+      : super(key: key);
 
   @override
   State<CodeMessage> createState() => _CodeMessageState();
@@ -20,6 +23,11 @@ class _CodeMessageState extends State<CodeMessage> {
         init: CodeCompletionController(),
         builder: (controller) {
           return Scaffold(
+            appBar: AppBar(
+              title: Text(widget.name),
+              automaticallyImplyLeading: false,
+              centerTitle: true,
+            ),
             body: SafeArea(
                 child: Column(
               children: [
@@ -37,7 +45,7 @@ class _CodeMessageState extends State<CodeMessage> {
                         height: 30.h)
                     : Container(),
                 Container(
-                  child: buildTextComposercode(controller),
+                  child: buildTextComposercode(controller, widget.i),
                 )
               ],
             )),

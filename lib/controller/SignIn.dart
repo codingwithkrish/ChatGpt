@@ -16,18 +16,22 @@ class SignInController extends GetxController {
   bool loading = true;
   SignInController();
   Future<void> signInWithGoogle() async {
-    Auth().signInWithGoogle().then((value) {
+    loading = false;
+    update();
+    await Auth().signInWithGoogle().then((value) {
       if (value == true) {
         Get.to(Home());
       }
     });
+    loading = true;
+    update();
   }
 
-  SiginWithEmail() {
+  SiginWithEmail() async {
     loading = false;
     update();
     if (emailcontroller.text.isNotEmpty && passController.text.isNotEmpty) {
-      Auth()
+      await Auth()
           .sigin(
               emailcontroller.text.toString(), passController.text.toString())
           .then((value) {

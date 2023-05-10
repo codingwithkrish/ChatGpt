@@ -22,7 +22,7 @@ class AuthController extends GetxController {
     loading = true;
 
     update();
-    Auth().signInWithGoogle().then((value) {
+    await Auth().signInWithGoogle().then((value) {
       if (value == true) {
         Get.to(() => Home());
       }
@@ -37,7 +37,7 @@ class AuthController extends GetxController {
     if (nameController.text.isNotEmpty &&
         emailController.text.isNotEmpty &&
         passwordController.text.isNotEmpty) {
-      Auth()
+      await Auth()
           .signWithemail(
               nameController.text.toString(),
               emailController.text.toString(),

@@ -13,13 +13,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/MainController.dart';
 import 'pages/Authentication/Login.dart';
 
-List<CameraDescription> cameras = [];
+late List<CameraDescription> cameras = [];
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   await Permission.camera.request();
   await Permission.microphone.request();
   cameras = await availableCameras();
+  final firstCamera = cameras.first;
   await Firebase.initializeApp();
 
   runApp(const MyApp());
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
 
     return ScreenUtilInit(builder: (context, child) {
       return GetMaterialApp(
-        title: 'ChatGpt',
+        title: 'AI COMPANION',
         debugShowCheckedModeBanner: false,
         darkTheme: Apptheme.darktheme,
         theme: Apptheme.lighttheme,

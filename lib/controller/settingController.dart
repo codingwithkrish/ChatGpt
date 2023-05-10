@@ -23,9 +23,11 @@ class SettingController extends GetxController {
 
   Future<void> _deleteCacheDir() async {
     Directory tempDir = await getTemporaryDirectory();
+    Directory? tempstorage = await getExternalStorageDirectory();
 
     if (tempDir.existsSync()) {
       tempDir.deleteSync(recursive: true);
+      tempstorage!.deleteSync(recursive: true);
     }
   }
 

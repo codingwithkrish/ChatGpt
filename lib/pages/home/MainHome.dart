@@ -1,5 +1,4 @@
 import 'package:chatgpt/constant/utils/spacing.dart';
-import 'package:chatgpt/pages/ObjectDetection/ui/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -73,15 +72,16 @@ class _MainHomeState extends State<MainHome> {
                           flex: 1,
                           child: container1(
                               "Code Completion", "assets/images/code.png", () {
-                            Get.to(CodeMessage());
+                            Get.to(CodeMessage(
+                              name: "EXplain Code",
+                              i: 0,
+                            ));
                           }),
                         ),
                         Expanded(
                           flex: 1,
-                          child: container1(
-                              "Object Detection", "assets/images/code.png", () {
-                            Get.to(HomeView());
-                          }),
+                          child: container1("Object Detection",
+                              "assets/images/code.png", () {}),
                         ),
                       ],
                     ),
@@ -100,7 +100,7 @@ class _MainHomeState extends State<MainHome> {
                     sizedBoxheight20,
                     carsoulSlider(controller.newsmodel),
                     sizedBoxheight14,
-                    listofchips(controller),
+                    //  listofchips(controller),
                     sizedBoxheight14,
                     controller.isloading
                         ? CircularProgressIndicator()

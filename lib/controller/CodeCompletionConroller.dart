@@ -13,7 +13,7 @@ class CodeCompletionController extends GetxController {
   List<CodeChat> chat = [];
   ScrollController scrollController = ScrollController();
   double maxscroll = 0.0;
-  sendmessage(CodeChat message) async {
+  sendmessage(CodeChat message, int i) async {
     chat.add(message);
     istyping = true;
     controller1.clear();
@@ -22,7 +22,7 @@ class CodeCompletionController extends GetxController {
 
     print(scrollController.position.maxScrollExtent);
 
-    String txt = await Request().getcodecompletion(message.text);
+    String txt = await Request().getcodecompletion(message.text, i);
     CodeController codeController = new CodeController(
       text: txt,
       patternMap: {
@@ -33,6 +33,7 @@ class CodeCompletionController extends GetxController {
     chat.add(CodeChat(
       text: txt,
       sender: "chatgpt",
+      i: i,
       codeController: codeController,
     ));
     istyping = false;

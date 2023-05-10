@@ -22,7 +22,7 @@ class ImageGenerationController extends GetxController {
     update();
     var data = {
       "prompt": searchtext.text.toString(),
-      "n": 10,
+      "n": 5,
       "size": "1024x1024"
     };
     if (!searchtext.text.isEmpty) {
@@ -44,12 +44,13 @@ class ImageGenerationController extends GetxController {
   downloadimage(String url) async {
     isdownloding = true;
     update();
+    DateTime dateTime = DateTime.now();
     var response = await Dio()
         .get(url, options: Options(responseType: ResponseType.bytes));
     final result = await ImageGallerySaver.saveImage(
         Uint8List.fromList(response.data),
         quality: 60,
-        name: "hello");
+        name: "hello" + dateTime.toString());
     Map<Object, Object> data = result;
     if (data["isSuccess"] == true) {
       Get.rawSnackbar(message: "Image downloaded");

@@ -5,6 +5,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../../controller/ImageGenrationController.dart';
 import '../../../utils/color.dart';
+import '../../../widgets/Widgethelper1.dart';
 
 class ImageGenration extends StatelessWidget {
   const ImageGenration({Key? key}) : super(key: key);
@@ -15,9 +16,16 @@ class ImageGenration extends StatelessWidget {
         init: ImageGenerationController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: controller.load == true
-                ? Colors.black.withOpacity(0.3)
-                : Colors.black,
+            appBar: AppBar(
+              //leadingWidth: 100.h,
+              leadingWidth: 80.w,
+              automaticallyImplyLeading: false,
+              title: Text(
+                "AI IMAGE GENRATOR",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              centerTitle: true,
+            ),
             body: SafeArea(
                 child: Padding(
               padding: EdgeInsets.all(10),
@@ -26,41 +34,44 @@ class ImageGenration extends StatelessWidget {
                   Column(
                     children: [
                       TextFormField(
+                        onFieldSubmitted: (value) {
+                          controller.getrequest();
+                        },
                         readOnly: !(controller.load == false &&
                             controller.isdownloding == false),
                         controller: controller.searchtext,
                         decoration: InputDecoration(
-                          fillColor: primarycolor,
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: primarycolor),
-                            borderRadius: BorderRadius.circular(
-                              25,
+                            fillColor: primarycolor,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: primarycolor),
+                              borderRadius: BorderRadius.circular(
+                                25.w.h,
+                              ),
                             ),
-                          ),
-                          hoverColor: primarycolor,
-                          focusColor: primarycolor,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.circular(
-                              25,
+                            hoverColor: primarycolor,
+                            focusColor: primarycolor,
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(
+                                25,
+                              ),
                             ),
-                          ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: primarycolor),
-                            borderRadius: BorderRadius.circular(
-                              25,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: primarycolor),
+                              borderRadius: BorderRadius.circular(
+                                25,
+                              ),
                             ),
-                          ),
-                          hintText: "Search for any image",
-                          suffixIcon: GestureDetector(
-                              onTap: () {
-                                controller.getrequest();
-                              },
-                              child: Icon(
-                                Icons.search,
-                              )),
-                          helperText: "Eg. A boy sitting in the cow",
-                        ),
+                            hintText: "Search for any image",
+                            suffixIcon: GestureDetector(
+                                onTap: () {
+                                  controller.getrequest();
+                                },
+                                child: Icon(
+                                  Icons.search,
+                                )),
+                            helperText: "Eg. A boy sitting in the cow",
+                            helperStyle: TextStyle(color: Colors.black87)),
                       ),
                       SizedBox(
                         height: 20,

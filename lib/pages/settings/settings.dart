@@ -41,7 +41,7 @@ class _SettingsState extends State<Settings> {
 
                               decoration: BoxDecoration(
                                   image: new DecorationImage(
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.fitHeight,
                                       image: new NetworkImage(
                                           snapshot.data.toString())),
                                   //borderRadius: BorderRadius.circular(150.w.h),

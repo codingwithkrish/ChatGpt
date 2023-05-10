@@ -15,6 +15,11 @@ class TextCompletion extends StatelessWidget {
         init: TextCompletionController(),
         builder: (controller) {
           return Scaffold(
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              title: Text("AI Comapnion"),
+              centerTitle: true,
+            ),
             resizeToAvoidBottomInset: true,
             body: SafeArea(
                 child: Column(

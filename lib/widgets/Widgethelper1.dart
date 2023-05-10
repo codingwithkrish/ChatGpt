@@ -1,4 +1,9 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:chatgpt/controller/AllNews.controller.dart';
+import 'package:path/path.dart' as path;
 
 import 'package:chatgpt/controller/CodeCompletionConroller.dart';
 import 'package:chatgpt/controller/HomeController.dart';
@@ -7,11 +12,17 @@ import 'package:chatgpt/pages/chatgpt/textcompletion.dart/Chat.dart';
 import 'package:chatgpt/pages/home/MainHome.dart';
 import 'package:chatgpt/pages/newspage.dart';
 import 'package:code_text_field/code_text_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:progressive_image/progressive_image.dart';
+import '../controller/AiAvatarGenerator.dart';
 import '../controller/textCompletionController.dart';
+import '../main.dart';
 import '../models/newsModel.dart';
+import '../pages/camera/cameraMain.dart';
 import '../utils/color.dart';
 
 Widget simplText(String text) {
@@ -64,6 +75,55 @@ Widget textfield(TextEditingController controller) {
         enabledBorder:
             OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
         border: OutlineInputBorder(borderSide: BorderSide(color: greywhite))),
+  );
+}
+
+Widget textfieldSupport(TextEditingController controller, int maxline) {
+  return TextFormField(
+    controller: controller,
+
+    maxLines: maxline,
+    keyboardType: TextInputType.multiline,
+    cursorColor: primarycolor,
+    // style: TextStyling.style2,
+    decoration: InputDecoration(
+        fillColor: primarycolor,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: greywhite),
+        ),
+        hoverColor: greywhite,
+        focusColor: greywhite,
+        enabledBorder:
+            OutlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+        border: OutlineInputBorder(borderSide: BorderSide(color: greywhite))),
+  );
+}
+
+Widget textfieldNews(
+    TextEditingController controller, AllNewsController newsController) {
+  return TextFormField(
+    controller: controller,
+    keyboardType: TextInputType.text,
+
+    onFieldSubmitted: (value) {
+      newsController.getnewsbysearch();
+    },
+    cursorColor: primarycolor,
+    // style: TextStyling.style2,
+    decoration: InputDecoration(
+        fillColor: primarycolor,
+        hintText: "Search Your News...........",
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(15.w.h)),
+        hoverColor: greywhite,
+        focusColor: greywhite,
+        enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(15.w.h)),
+        border: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black),
+            borderRadius: BorderRadius.circular(15.w.h))),
   );
 }
 
@@ -137,21 +197,59 @@ Widget carsoulSlider(List<NewsModel> news) {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.w.h),
+                      child: ProgressiveImage(
+                        height: 180.h,
+                        image: NetworkImage(i.imageurl.toString()),
+                        placeholder: AssetImage("assets/images/gallery.png"),
+                        thumbnail: AssetImage("assets/images/code.png"),
+                        width: MediaQuery.of(context).size.width,
+                      )),
                   decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      image: DecorationImage(
-                          fit: BoxFit.fill,
-                          image: NetworkImage(i.imageurl.toString())),
-                      borderRadius: BorderRadius.circular(10.w.h)),
+                      border: Border.all(color: Colors.black, width: 0.6),
+                      // image: DecorationImage(
+                      //     fit: BoxFit.fill,
+                      //     image: NetworkImage(
+                      //       i.imageurl.toString(),
+                      //     )),
+                      borderRadius: BorderRadius.circular(
+                        10.w.h,
+                      )),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    i.tittle.toString(),
-                    // style: TextStyling.style2,
-                    textAlign: TextAlign.center,
-                  ),
-                )
+                Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 5.h),
+                      height: 70.h,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10.w.h),
+                            bottomRight: Radius.circular(10.w.h),
+                          ),
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.transparent,
+                                Colors.black,
+                                Colors.black87,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter)),
+                      child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 5, vertical: 0),
+                          child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                i.tittle.toString(),
+                                style: TextStyle(
+                                    color: backgroundlight,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.sp),
+                              ))),
+                    )),
               ],
             ),
           );
@@ -168,8 +266,11 @@ Widget buildTextComposer(TextCompletionController change) {
       children: [
         Expanded(
           child: TextField(
+            maxLines: 2,
+            minLines: 1,
             enabled: !change.istyping,
             style: TextStyle(),
+            textInputAction: TextInputAction.newline,
             controller: change.controller1,
             decoration: InputDecoration(
                 hintText: "Question/description",
@@ -218,7 +319,7 @@ Widget buildTextComposer(TextCompletionController change) {
   );
 }
 
-Widget buildTextComposercode(CodeCompletionController change) {
+Widget buildTextComposercode(CodeCompletionController change, int i) {
   return Padding(
     padding: EdgeInsets.symmetric(horizontal: 5.w),
     child: Row(
@@ -227,6 +328,7 @@ Widget buildTextComposercode(CodeCompletionController change) {
           child: TextField(
             enabled: !change.istyping,
             style: TextStyle(),
+            textInputAction: TextInputAction.newline,
             controller: change.controller1,
             decoration: InputDecoration(
                 hintText: "Question/description",
@@ -264,11 +366,14 @@ Widget buildTextComposercode(CodeCompletionController change) {
                     },
                   );
                   FocusManager.instance.primaryFocus?.unfocus();
-                  await change.sendmessage(CodeChat(
-                    text: change.controller1.text.toString(),
-                    sender: "sender",
-                    codeController: codeController,
-                  ));
+                  await change.sendmessage(
+                      CodeChat(
+                        text: change.controller1.text.toString(),
+                        sender: "sender",
+                        i: i,
+                        codeController: codeController,
+                      ),
+                      i);
 
                   final position =
                       change.scrollController.position.maxScrollExtent;
@@ -291,52 +396,140 @@ Widget listofnews(List<NewsModel> news) {
     shrinkWrap: true,
     itemCount: news.length,
     itemBuilder: (context, index) {
-      return GestureDetector(
-        onTap: () {
-          Get.to(NewsPage(model: news[index]));
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.35),
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(10.w.h)),
-          margin: EdgeInsets.all(5),
-          padding: EdgeInsets.all(5),
-          child: Row(children: [
-            Container(
-              width: 120,
-              height: 120,
-              margin: EdgeInsets.symmetric(horizontal: 5.0),
+      if (index % 5 == 0) {
+        return GestureDetector(
+          onTap: () {
+            Get.to(NewsPage(model: news[index]));
+          },
+          child: Container(
               decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.35),
                   border: Border.all(color: Colors.black),
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(
-                      news[index].imageurl.toString(),
-                    ),
+                  borderRadius: BorderRadius.circular(10.w.h)),
+              margin: EdgeInsets.all(5),
+              child: Stack(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 200.h,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.w.h),
+                        child: ProgressiveImage(
+                          height: 200.h,
+                          image: NetworkImage(news[index].imageurl.toString()),
+                          placeholder: AssetImage("assets/images/gallery.png"),
+                          thumbnail: AssetImage("assets/images/code.png"),
+                          width: MediaQuery.of(context).size.width,
+                        )),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 0.6),
+                        // image: DecorationImage(
+                        //   fit: BoxFit.fill,
+                        //   image: NetworkImage(
+                        //     news[index].imageurl.toString(),
+                        //   ),
+                        // ),
+                        borderRadius: BorderRadius.circular(10.w.h)),
                   ),
-                  borderRadius: BorderRadius.circular(25.w.h)),
-            ),
-            SizedBox(
-              width: 10.w,
-            ),
-            Expanded(
-              child: Container(
-                child: Text(
-                  // overflow: TextOverflow.ellipsis,
-                  news[index].tittle.toString(),
-                  //  style: TextStyling.style2,
-                ),
-              ),
-            )
-          ]),
-        ),
-      );
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: Container(
+                        height: 50.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(10.w.h),
+                              bottomRight: Radius.circular(10.w.h),
+                            ),
+                            gradient: LinearGradient(
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black,
+                                  Colors.black87,
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter)),
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 0),
+                            child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text(
+                                  news[index].tittle.toString(),
+                                  style: TextStyle(
+                                      color: backgroundlight,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.sp),
+                                ))),
+                      )),
+                ],
+              )),
+        );
+      } else {
+        return GestureDetector(
+          onTap: () {
+            Get.to(NewsPage(model: news[index]));
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.7),
+                border: Border.all(color: Colors.black, width: 0.6),
+                borderRadius: BorderRadius.circular(10.w.h)),
+            margin: EdgeInsets.all(5),
+            padding: EdgeInsets.all(5),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 120.w,
+                    height: 120.h,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.w.h),
+                        child: ProgressiveImage(
+                          height: 120.h,
+                          image: NetworkImage(news[index].imageurl.toString()),
+                          placeholder: AssetImage("assets/images/gallery.png"),
+                          thumbnail: AssetImage("assets/images/code.png"),
+                          width: 120.w,
+                        )),
+                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 0.6),
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: NetworkImage(
+                            news[index].imageurl.toString(),
+                          ),
+                        ),
+                        borderRadius: BorderRadius.circular(10.w.h)),
+                  ),
+                  SizedBox(
+                    width: 10.w,
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Text(
+                        // overflow: TextOverflow.ellipsis,
+                        news[index].tittle.toString(),
+                        style: TextStyle(
+                            color: backgroundlight,
+                            fontSize: 15.sp,
+                            fontWeight: FontWeight.bold),
+                        //  style: TextStyling.style2,
+                      ),
+                    ),
+                  )
+                ]),
+          ),
+        );
+      }
     },
   );
 }
 
-Widget listofchips(HomeController controller) {
+Widget listofchips(AllNewsController controller) {
   return SingleChildScrollView(
     scrollDirection: Axis.horizontal,
     child: Row(
@@ -344,8 +537,7 @@ Widget listofchips(HomeController controller) {
       return Container(
         margin: EdgeInsets.all(5.h.w),
         child: ActionChip(
-          backgroundColor:
-              controller.domain == item ? primarycolor : Colors.grey,
+          backgroundColor: controller.domain == item ? primarycolor : greywhite,
           label: Text(item),
           padding: EdgeInsets.all(5.h.w),
           onPressed: () {
@@ -359,7 +551,21 @@ Widget listofchips(HomeController controller) {
   );
 }
 
-Widget boxhome(VoidCallback ontap, String text1, String text2) {
+Widget tokenContainer() {
+  return Container(
+      margin: EdgeInsets.symmetric(vertical: 5.h, horizontal: 3.w),
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.w.h), color: primarycolor),
+      alignment: Alignment.center,
+      child: Text(
+        "10 Token left",
+        style: TextStyle(color: Colors.black),
+        textAlign: TextAlign.center,
+      ));
+}
+
+Widget boxhome(VoidCallback ontap, String text1, String text2, IconData icons) {
   return GestureDetector(
     onTap: ontap,
     child: Padding(
@@ -377,7 +583,7 @@ Widget boxhome(VoidCallback ontap, String text1, String text2) {
                 decoration: BoxDecoration(
                     color: primarycolor,
                     borderRadius: BorderRadius.circular(20.w.h)),
-                child: Icon(Icons.wifi_protected_setup)),
+                child: Icon(icons)),
             SizedBox(
               width: 5.w,
             ),
@@ -385,7 +591,7 @@ Widget boxhome(VoidCallback ontap, String text1, String text2) {
               child: Column(
                 children: [
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       text1,
                       style: TextStyle(
@@ -417,5 +623,93 @@ ListTileE(IconData icos, String text, VoidCallback ontap) {
     leading: Icon(icos),
     title: Text(text),
     onTap: ontap,
+  );
+}
+
+showdialog(BuildContext context, AiAvatarGeneratorControler controler) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Column(
+          children: <Widget>[
+            Text("Image Selection"),
+            Icon(
+              Icons.image,
+              color: Colors.red,
+            ),
+          ],
+        ),
+        content: new Text("Please Select One Process to Continue"),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text(
+              "Upload with Camera",
+            ),
+            onPressed: () async {
+              String? result = await Get.to(() => CameraMain(
+                    camera: cameras.first,
+                  ));
+              print("Krish" + result.toString());
+              if (result!.isNotEmpty) {
+                final extension = path.extension(result);
+                if (extension.toLowerCase() == ".png" ||
+                    extension.toLowerCase() == ".jpg") {
+                  controler.pickimaged = true;
+                  controler.imagepath = File(result);
+                  controler.update();
+                  Get.back();
+                } else {
+                  showimagenotformat(context);
+                }
+                controler.imageurl = result;
+                controler.update();
+              }
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text("Upload With Gallery"),
+            onPressed: () {
+              controler.pickimage(context);
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text("Cancel"),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+showimagenotformat(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Column(
+          children: <Widget>[
+            Text("Image Format Not correct"),
+            Icon(
+              Icons.image,
+              color: Colors.red,
+            ),
+          ],
+        ),
+        content:
+            new Text("Image Format Not correct , It should be in .png or .jpg"),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text("Ok"),
+            onPressed: () {
+              Get.back();
+            },
+          ),
+        ],
+      );
+    },
   );
 }

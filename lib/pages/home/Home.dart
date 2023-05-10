@@ -1,4 +1,5 @@
 import 'package:chatgpt/constant/utils/spacing.dart';
+import 'package:chatgpt/pages/aiavatar/AiAvatarGenrator.dart';
 import 'package:chatgpt/pages/home/MainHome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
@@ -11,6 +12,12 @@ import '../../controller/textCompletionController.dart';
 import '../../services/SharedPrefences.dart';
 import '../../utils/color.dart';
 import '../../widgets/Widgethelper1.dart';
+import '../News/AllNews.dart';
+import '../chatgpt/codecompletion/CodeHome.dart';
+import '../chatgpt/imagegenration/imagegenration.dart';
+import '../chatgpt/textcompletion.dart/TextCompletion.dart';
+import '../setting/setting.dart';
+import '../setting/support.dart';
 import '../settings/settings.dart';
 
 class Home extends StatefulWidget {
@@ -70,18 +77,32 @@ class _HomeState extends State<Home> {
                 ListTile(
                   leading: Image.asset("assets/images/gpt.png"),
                   title: Text(
-                    "ChatGpt",
+                    "Ai Companion",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 18.sp),
                   ),
                 ),
-                ListTileE(Icons.newspaper, "Daily News", () {}),
-                ListTileE(Icons.image, "AI IMAGE Generator", () {}),
-                ListTileE(Icons.text_fields_sharp, "Text Completion", () {}),
-                ListTileE(Icons.code_sharp, "Code Completion", () {}),
-                ListTileE(Icons.camera, "Object Detection", () {}),
-                ListTileE(Icons.settings, "Settings", () {}),
-                ListTileE(Icons.support, "Support", () {})
+                ListTileE(Icons.chat_bubble_outline_sharp, "AI ChaBot", () {
+                  Get.to(() => TextCompletion());
+                }),
+                ListTileE(Icons.image, "AI IMAGE Generator", () {
+                  Get.to(() => ImageGenration());
+                }),
+                ListTileE(Icons.camera, "AI Avatar Genrator", () {
+                  Get.to(() => AiAvatarGenrator());
+                }),
+                ListTileE(Icons.code_sharp, "For Developer's", () {
+                  Get.to(() => CodeHome());
+                }),
+                ListTileE(Icons.newspaper, "Daily News", () {
+                  Get.to(() => AllNews());
+                }),
+                ListTileE(Icons.settings, "Settings", () {
+                  Get.to(Setting());
+                }),
+                ListTileE(Icons.support, "Support", () {
+                  Get.to(() => Support());
+                })
               ],
             ),
           ),
@@ -106,43 +127,43 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(48.0),
-            child: Theme(
-              data: Theme.of(context).copyWith(accentColor: Colors.white),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: primarycolor,
-                          border: Border.all(color: primarycolor),
-                          borderRadius: BorderRadius.circular(10.w.h)),
-                      alignment: Alignment.center,
-                      child: Row(children: [
-                        Icon(
-                          Icons.video_library_sharp,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Watch a Demo",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )
-                      ]),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // bottom: PreferredSize(
+          //   preferredSize: const Size.fromHeight(48.0),
+          //   child: Theme(
+          //     data: Theme.of(context).copyWith(accentColor: Colors.white),
+          //     child: Padding(
+          //       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 5.w),
+          //       child: Row(
+          //         mainAxisAlignment: MainAxisAlignment.end,
+          //         children: [
+          //           Container(
+          //             // padding: EdgeInsets.all(5),
+          //             // decoration: BoxDecoration(
+          //             //     color: primarycolor,
+          //             //     border: Border.all(color: primarycolor),
+          //             //     borderRadius: BorderRadius.circular(10.w.h)),
+          //             alignment: Alignment.center,
+          //             child: Row(children: [
+          //               // Icon(
+          //               //   Icons.video_library_sharp,
+          //               //   color: Colors.white,
+          //               // ),
+          //               // SizedBox(
+          //               //   width: 10,
+          //               // ),
+          //               // Text(
+          //               //   "Watch a Demo",
+          //               //   style: TextStyle(fontWeight: FontWeight.w600),
+          //               // )
+          //             ]),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
           title: Text(
-            "ChatGpt",
+            "Ai Companion",
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
           actions: [
@@ -193,7 +214,7 @@ class _HomeState extends State<Home> {
                     Container(
                         alignment: Alignment.center,
                         child: Text(
-                          "ChatGpt",
+                          "Ai Companion",
                           style: TextStyle(
                               fontSize: 21.sp, fontWeight: FontWeight.w700),
                         )),
@@ -220,25 +241,33 @@ class _HomeState extends State<Home> {
                             textAlign: TextAlign.center,
                           ),
                           sizedBoxheight14,
-                          boxhome(
-                              () {},
-                              "Write a factual content on the latest topics,including today's news",
-                              "Write a factual content on the latest topics,including today's news"),
+                          boxhome(() {
+                            Get.to(TextCompletion());
+                          },
+                              "The Ai ChatBot",
+                              "This AI chatbot is a highly advanced technologies to provide users with a human-like conversation experience and access to a vast knowledge base.",
+                              Icons.text_fields_sharp),
                           sizedBoxheight5,
                           boxhome(() {
-                            Get.to(MainHome());
-                          }, "Write a factual content on the latest topics,including today's news",
-                              "Write a factual content on the latest topics,including today's news"),
+                            Get.to(ImageGenration());
+                          },
+                              "Ai Image Genrator",
+                              "The AI image generator is a highly advanced tool to  create highly realistic and accurate images of various types .",
+                              Icons.image),
                           sizedBoxheight5,
-                          boxhome(
-                              () {},
-                              "Write a factual content on the latest topics,including today's news",
-                              "Write a factual content on the latest topics,including today's news"),
+                          boxhome(() {
+                            Get.to(AiAvatarGenrator());
+                          },
+                              "Ai Avatar Genrator",
+                              "The AI avatar generator is a cutting-edge tool  to create personalized avatars in various styles, including cartoon,anime and caricuture.",
+                              Icons.camera),
                           sizedBoxheight5,
-                          boxhome(
-                              () {},
-                              "Write a factual content on the latest topics,including today's news",
-                              "Write a factual content on the latest topics,including today's news"),
+                          boxhome(() {
+                            Get.to(CodeHome());
+                          },
+                              "For Developer's",
+                              "This AI programming code writing tool is a highly advanced system to generate code automatically. The tool can write code in various programming languages, including Python, Java, and C++ etc.",
+                              Icons.code_sharp),
                         ],
                       ),
                     )
@@ -246,19 +275,19 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            Flexible(
-              //flex: ,
-              child: Container(
-                // /  height: 40.h,
-                decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.w.h),
-                        topRight: Radius.circular(10.w.h))),
-                //  padding: EdgeInsets.all(2.w.h),
-                child: buildTextComposer(controller),
-              ),
-            ),
+            // Flexible(
+            //   //flex: ,
+            //   child: Container(
+            //     // /  height: 40.h,
+            //     decoration: BoxDecoration(
+            //         color: Colors.white.withOpacity(0.1),
+            //         borderRadius: BorderRadius.only(
+            //             topLeft: Radius.circular(10.w.h),
+            //             topRight: Radius.circular(10.w.h))),
+            //     //  padding: EdgeInsets.all(2.w.h),
+            //     child: buildTextComposer(controller),
+            //   ),
+            // ),
           ],
         )),
       ),

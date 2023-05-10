@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:chatgpt/controller/AuthenticationController.dart';
 import 'package:chatgpt/pages/Authentication/Signup.dart';
+import 'package:chatgpt/utils/color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
@@ -32,8 +34,10 @@ class _LoginState extends State<Login> {
           return Scaffold(
             body: SafeArea(
                 child: controller.loading == true
-                    ? CircularProgressIndicator(
-                        color: Colors.red,
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: primarycolor,
+                        ),
                       )
                     : Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -62,8 +66,10 @@ class _LoginState extends State<Login> {
                             textfield(controller.passwordController),
                             sizedBoxheight14,
                             controller.loading == true
-                                ? CircularProgressIndicator(
-                                    color: Colors.red,
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: primarycolor,
+                                    ),
                                   )
                                 : LoginButton("Create Account", () async {
                                     await controller.signWithEmail();
@@ -87,7 +93,51 @@ class _LoginState extends State<Login> {
                                   ),
                                 )
                               ],
-                            )
+                            ),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Get.to(Scaffold(
+                                    body: SafeArea(
+                                      child: InAppWebView(
+                                          initialUrlRequest: URLRequest(
+                                              url: Uri.parse(
+                                                  "https://sites.google.com/view/aicompanion-privacypolicy"))),
+                                    ),
+                                  ));
+                                },
+                                child: Text(
+                                  "Privacy Policy",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 8.sp,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                )),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            GestureDetector(
+                                onTap: () {
+                                  Get.to(Scaffold(
+                                    body: SafeArea(
+                                      child: InAppWebView(
+                                          initialUrlRequest: URLRequest(
+                                              url: Uri.parse(
+                                                  "https://sites.google.com/view/aicompanion-termsandcondition/home"))),
+                                    ),
+                                  ));
+                                },
+                                child: Text(
+                                  "Terms & Condition",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 8.sp,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                ))
                           ],
                         ),
                       )),
